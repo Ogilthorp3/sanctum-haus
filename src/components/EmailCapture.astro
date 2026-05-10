@@ -1,0 +1,90 @@
+---
+// Email-capture form. The action POSTs to a Cloudflare Pages Function
+// at /api/notify-me which is intentionally a stub on first deploy —
+// wire it to your email provider (Buttondown, ConvertKit, KV-only,
+// etc.) before going live to real traffic.
+//
+// Until that's wired, the form falls back to a `mailto:` so the early
+// founder-list audience just emails Bert directly. Better a real email
+// thread than a silent void.
+
+interface Props {
+    listName?: string;
+}
+
+const { listName = "founders" } = Astro.props;
+---
+
+<form
+    class="signup"
+    action="/api/notify-me"
+    method="POST"
+    data-list={listName}
+>
+    <input
+        type="email"
+        name="email"
+        placeholder="you@haus.example"
+        required
+        autocomplete="email"
+        spellcheck="false"
+    />
+    <button type="submit">Notify me</button>
+</form>
+<p class="signup-note" data-default-note>
+    Three emails total: founder beta opens, public v1 ships, we cross
+    1,000 households. Then we go quiet.
+</p>
+
+<script>
+    // Progressive enhancement: if /api/notify-me is missing, fall back
+    // to mailto so early traffic still reaches a human.
+    const FALLBACK_TO = "founders@sanctum.haus";
+    document.querySelectorAll<HTMLFormElement>("form.signup").forEach(
+        (form) => {
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const email = (
+                    form.querySelector(
+                        'input[type="email"]',
+                    ) as HTMLInputElement
+                ).value.trim();
+                if (!email) return;
+
+                try {
+                    const r = await fetch(form.action, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            email,
+                            list: form.dataset.list,
+                        }),
+                    });
+                    if (r.ok) {
+                        // Replace form contents with a thank-you note,
+                        // built via DOM (not innerHTML) for safety.
+                        const note = document.createElement("p");
+                        note.className = "signup-note";
+                        note.textContent =
+                            "Thanks. You'll hear from us soon.";
+                        form.replaceWith(note);
+                        return;
+                    }
+                    throw new Error("api-not-ready");
+                } catch (_err) {
+                    // mailto fallback
+                    const subject = encodeURIComponent(
+                        "Notify me when Sanctum Haus ships",
+                    );
+                    const body = encodeURIComponent(
+                        `Hi — please add ${email} to the ${
+                            form.dataset.list
+                        } list.\n\n— sent from sanctum.haus`,
+                    );
+                    window.location.href =
+                        `mailto:${FALLBACK_TO}?subject=${subject}&body=${body}`;
+                }
+            });
+        },
+    );
+</script>

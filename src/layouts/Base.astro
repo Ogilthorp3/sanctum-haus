@@ -1,0 +1,57 @@
+---
+import "../styles/global.css";
+
+interface Props {
+    title: string;
+    description?: string;
+    crossLinkLabel?: string;
+    crossLinkHref?: string;
+}
+
+const {
+    title,
+    description = "An AI council for the haus you actually own.",
+    crossLinkLabel = "for developers →",
+    crossLinkHref = "https://www.sanctum.run/",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content={description} />
+        <meta name="color-scheme" content="dark" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
+        />
+        <title>{title}</title>
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:site_name" content="Sanctum Haus" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+    </head>
+    <body>
+        <header class="site-header">
+            <a href="/" class="brand">Sanctum · Haus</a>
+            <a href={crossLinkHref}>{crossLinkLabel}</a>
+        </header>
+        <slot />
+        <footer class="site-footer">
+            <span>Built in Québec · Runs in your house</span>
+            <span>
+                <a href="/notes/">Notes</a> ·
+                <a href="/press/">Press</a> ·
+                <a href="https://www.sanctum.run/">Docs</a>
+            </span>
+        </footer>
+    </body>
+</html>
