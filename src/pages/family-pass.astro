@@ -1,0 +1,189 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+    title="Family Pass v1.0 · Sanctum Haus"
+    description="What's in Sanctum Family Pass v1.0, what's coming in v1.1, why Firewalla, and why a one-time $129 license."
+>
+    <main>
+        <p class="tagline">Family Pass · v1.0</p>
+
+        <h1>Family Pass, v1.0</h1>
+
+        <p class="lede">
+            A one-time license for the haus you actually own. Lifetime.
+            Yours forever. No subscription that can disappear next
+            quarter, no "your data may be used to improve our models," no
+            cloud round-trip in the hot path.
+        </p>
+
+        <h2>What's in v1.0</h2>
+
+        <h3>Sanctum Core</h3>
+        <ul>
+            <li>
+                <strong>The council</strong> — Yoda, Qui-Gon, Windu,
+                Cilghal, and friends. Eight specialized agents,
+                orchestrated through a single voice agent on your phone.
+            </li>
+            <li>
+                <strong>The cathedral</strong> — Qwen 3.6 35B-A3B-4bit
+                running locally on Apple Silicon at 50+ tokens/sec. No
+                OpenAI bill, no rate limits, no terms-of-service drift.
+            </li>
+            <li>
+                <strong>OpenClaw VM</strong> — Lima-managed Ubuntu VM
+                with the agent runtime, isolated from your Mac host.
+                Snapshots, restorable, dependency-free on the macOS
+                side.
+            </li>
+            <li>
+                <strong>Force Flow</strong> — your haus's nervous
+                system. Routes alerts, watches the watchers, fails
+                loud, runs on loopback so it can't get pwned from your
+                LAN.
+            </li>
+            <li>
+                <strong>Backup + Watchdogs</strong> — daily encrypted
+                backups, self-healing LaunchAgents, hands-off recovery
+                from the kinds of small breakages macOS quietly hands
+                you on Sunday morning.
+            </li>
+            <li>
+                <strong>mTLS everywhere</strong> — every internal
+                service connection mutually authenticated. Defense in
+                depth, not just at the LAN edge.
+            </li>
+        </ul>
+
+        <h3>Screen Time module</h3>
+        <p>
+            The parental-controls system that actually works when Apple's
+            don't. Sanctum Screen Time enforces curfews, wind-down
+            windows, homework gates, and per-device credits at the
+            <em>network</em> level — through Firewalla MAC-based blocks
+            — so it survives factory resets, fresh Apple IDs, screen
+            recording, and the rest of the workarounds that make Apple
+            Family Sharing a coin flip.
+        </p>
+        <p>
+            Ships with a PWA on <code>localhost:5151</code>, a Home
+            Assistant integration, and a Holocron panel. Schedule lives
+            in YAML, version-controllable, diff-friendly.
+        </p>
+
+        <hr />
+
+        <h2>What's coming in v1.1</h2>
+        <p class="muted">
+            None of this is in the v1.0 pilot. Listed so you know what
+            you're aiming at.
+        </p>
+        <ul>
+            <li>
+                <strong>Stripe checkout</strong> — the actual
+                $129-one-time-license flow. v1.0 pilot is free and
+                inviation-based; v1.1 opens the door.
+            </li>
+            <li>
+                <strong>PWA polish</strong> — touch targets, offline
+                bundle, the parts of mobile UX that are obvious in
+                retrospect.
+            </li>
+            <li>
+                <strong>Cilghal as family assistant</strong> — the
+                council's calmest member, exposed as a per-person AI
+                you talk to instead of typing into.
+            </li>
+            <li>
+                <strong>Eero adapter</strong> — Firewalla is the
+                tier-1 router story; Eero is the next one. Adapter
+                interface designed so we don't have to fork v2 every
+                time a new mesh-router brand wants in.
+            </li>
+            <li>
+                <strong>Cloud Sync</strong> — optional, $5/mo,
+                customer-owned R2 or B2 bucket. Cross-device memory
+                sync for the Holocron mobile app. If you don't want
+                it, don't enable it — the local core works without it
+                forever.
+            </li>
+            <li>
+                <strong>Yoda voice</strong> — the LiveKit-based phone
+                agent, packaged for non-developer install. v1.0 ships
+                with the council you type at; v1.1 ships with the
+                council you call.
+            </li>
+            <li>
+                <strong>Cathedral local LLM autoswap</strong> — when
+                Qwen 3.7 or whatever comes next is the right model,
+                you get it without a manual surgery.
+            </li>
+        </ul>
+
+        <hr />
+
+        <h2>Why Firewalla</h2>
+        <p>
+            We could have built our own MAC-blocking firewall.
+            Re-implementing what Firewalla does well — DPI, route-level
+            blocks, the whole evasion-resistant enforcement story — is a
+            multi-year project. Firewalla already ships hardware that does
+            this, on a router-grade chassis you keep behind your
+            internet-facing modem. They take care of the part that has to
+            be brutal and we take care of the part that has to be
+            thoughtful.
+        </p>
+        <p>
+            The architecturally important property: Sanctum's screen-time
+            rules are
+            <em>installed into the Firewalla itself</em>. If the Sanctum
+            bridge process crashes overnight, the Firewalla keeps
+            enforcing whatever was last set. The kids do not get an
+            uncontrolled internet window when our software goes sideways.
+            This is what we mean by fail-closed — the dangerous failure
+            mode is the absent one, not the dropping-blocks one.
+        </p>
+        <p>
+            We're an adapter on top of Firewalla, not a replacement for
+            it. You buy a Firewalla anyway. Sanctum makes it smarter, not
+            optional.
+        </p>
+
+        <hr />
+
+        <h2>Why a one-time $129 license</h2>
+        <p>
+            I can't keep maintaining this for free. I also refuse to make
+            it depend on the cloud, which means I refuse to fund it through
+            recurring API costs that I push onto you. A one-time payment
+            for the premium features pays for the maintenance time. The
+            open-source core stays free forever.
+        </p>
+        <p>
+            $129 is the price of one month of a mid-tier cloud AI
+            subscription. You pay it once. We do not have a renewal team,
+            a churn dashboard, or a quarterly board meeting where someone
+            asks how to raise the floor.
+        </p>
+        <p class="muted">
+            v1.0 pilot is free for invited haushelds — see <a
+                href="/pilot/">the pilot page</a> if you want in.
+        </p>
+
+        <hr />
+
+        <h2>Ready to install?</h2>
+        <p>
+            See <a href="/install/">the short install guide</a> here on the
+            haus site, or the full
+            <a href="https://www.sanctum.run/getting-started/installation/"
+                >installation runbook</a
+            >
+            on the docs site. The pilot installer is hash-pinned and
+            two-stepped — you check the SHA-256, you read the script, and
+            then you run it. Trust is earned, not curled.
+        </p>
+    </main>
+</Base>

@@ -1,0 +1,143 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+    title="Install · Sanctum Family Pass"
+    description="The six-step install for Sanctum Family Pass v1.0. Hash-pinned, two-step, no surprises."
+>
+    <main>
+        <p class="tagline">Install · v1.0 pilot</p>
+
+        <h1>Install Sanctum, six steps</h1>
+
+        <p class="lede">
+            One curl pair, one hash check, one bash run. The whole install
+            is in front of you on disk before anything runs — that is the
+            point of the two-step pattern. If you came expecting a
+            thousand-line bootstrap script with a fugue-state config
+            phase, you have the wrong era of Sanctum.
+        </p>
+
+        <h2>Before you start</h2>
+        <ul>
+            <li>Mac with Apple Silicon, macOS 14 or newer</li>
+            <li>16 GB RAM minimum, 80 GB free disk</li>
+            <li>Firewalla on your LAN (you do not need to pair it yet)</li>
+            <li>Homebrew installed</li>
+        </ul>
+        <p>
+            The installer handles the rest — Lima, socket_vmnet, age,
+            sops, and the LaunchAgent stack. If something is missing it
+            tells you what is missing and stops. It does not silently
+            install Xcode for you.
+        </p>
+
+        <h2>The six steps</h2>
+
+        <h3>1. Download the installer and its hash</h3>
+        <pre><code>{`curl -fsSLO https://sanctum.haus/install.sh
+curl -fsSLO https://sanctum.haus/install.sh.sha256`}</code></pre>
+        <p>
+            Two files. The script, and the cryptographic fingerprint of
+            the script. The fingerprint is short. The script is not.
+        </p>
+
+        <h3>2. Verify the hash</h3>
+        <pre><code>{`shasum -a 256 -c install.sh.sha256`}</code></pre>
+        <p>Expected output:</p>
+        <pre><code>{`install.sh: OK`}</code></pre>
+        <p>
+            If it does <em>not</em> say <code>OK</code>, stop. The
+            download is corrupt, mid-flight tampered, or pointed at the
+            wrong file. Re-download both. If the second attempt fails the
+            same way, ask in the pilot Signal group before proceeding.
+            We did not write this step for fun.
+        </p>
+
+        <h3>3. Eyeball the script</h3>
+        <pre><code>{`less install.sh`}</code></pre>
+        <p>
+            The script opens with a numbered plan of what it will do —
+            directory creation, Lima VM provisioning, LaunchAgent
+            installation, self-test. Read the plan. Then trust it, because
+            you read it.
+        </p>
+
+        <h3>4. Dry-run first</h3>
+        <pre><code>{`bash install.sh --dry-run`}</code></pre>
+        <p>
+            This walks the plan without making changes. It prints what it
+            would create, where, and which sudo prompts you should
+            expect. If the dry-run says something you do not want, the
+            wet-run will do that same thing.
+        </p>
+
+        <h3>5. Run it</h3>
+        <pre><code>{`bash install.sh`}</code></pre>
+        <p>
+            One sudo password prompt — Lima and socket_vmnet need it for
+            host networking. The script ends when <code>sanctum
+            self-test</code> passes. If self-test fails, the installer
+            leaves you with a populated <code>~/.sanctum</code> and a
+            non-zero exit code;
+            <code>sanctum doctor</code> tells you what broke.
+        </p>
+
+        <h3>6. Back up your age key</h3>
+        <pre><code>{`sanctum keys backup ~/Desktop/sanctum-keys.age`}</code></pre>
+        <p>
+            Move the resulting file somewhere durable — a USB key, an
+            encrypted external disk, wherever you keep recovery codes.
+            Without it, your encrypted Sanctum secrets are unrecoverable
+            if the Mac fails. There is no recovery email. There is no
+            support line that will undo this for you. This is the price
+            of running on hardware you actually own.
+        </p>
+
+        <hr />
+
+        <h2>After install</h2>
+        <p>A short tour of the operator surface:</p>
+        <ul>
+            <li>
+                <code>sanctum status</code> — daily green/red glance,
+                six lines.
+            </li>
+            <li>
+                <code>sanctum doctor</code> — full diagnostic, prints
+                what failed and a hint per failure.
+            </li>
+            <li>
+                <code>sanctum logs &lt;service&gt;</code> — tail any
+                subsystem (e.g. <code>sanctum logs firewalla</code>).
+            </li>
+            <li>
+                <code>sanctum self-test</code> — re-run the eleven
+                post-install probes any time.
+            </li>
+        </ul>
+        <p>
+            Next step: pair the Firewalla so Sanctum can actually enforce
+            schedules. The full pairing walkthrough is in
+            <a href="https://www.sanctum.run/getting-started/firewalla-pairing/"
+                >the docs</a
+            >.
+        </p>
+
+        <hr />
+
+        <h2>About this download</h2>
+        <p class="muted">
+            The <code>install.sh</code> served from this page is the
+            current tested HEAD of the
+            <code>sanctum-cli</code> repo. For v1.0 pilot we ship from
+            HEAD; v1.1 will pin to a signed git tag and rebuild the
+            served artifact only on tag push. If you want to verify the
+            source, the upstream repo is at
+            <code>github.com/Ogilthorp3/sanctum-cli</code> and the
+            corresponding <code>install.sh</code> is the file with the
+            same SHA-256 as the one you downloaded.
+        </p>
+    </main>
+</Base>
