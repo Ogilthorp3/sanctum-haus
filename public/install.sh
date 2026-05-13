@@ -6,7 +6,7 @@ set -euo pipefail
 VERSION="1.0.0"
 SANCTUM_HOME="${SANCTUM_HOME:-$HOME/.sanctum}"
 SANCTUM_OPT="${SANCTUM_OPT:-/opt/sanctum}"
-SANCTUM_REPOS="sanctum-runtime sanctum-screen-time sanctum-cli"
+SANCTUM_REPOS="sanctum-runtime sanctum-screen-time sanctum-family-pass"
 LIMA_VERSION_MIN="2.1"
 
 DRY_RUN=0
@@ -73,12 +73,14 @@ cat <<PLAN
   1. Check prerequisites (macOS >=14 arm64, >=16GB RAM, brew, Firewalla reachable)
   2. Install/verify socket_vmnet at /opt/socket_vmnet (root-owned)
   3. Install Lima >=$LIMA_VERSION_MIN via brew
+  3.5. Install pyyaml (sanctum CLI config reads need it)
   4. Install /etc/sudoers.d/sanctum-vmnet (one-time sudo)
-  5. Clone sanctum-runtime, sanctum-screen-time, sanctum-cli to $SANCTUM_OPT
+  5. Clone sanctum-runtime, sanctum-screen-time, sanctum-family-pass to $SANCTUM_OPT
   6. Generate sops age keypair at ~/.config/sops/age/keys.txt
   7. Write $SANCTUM_HOME/sanctum.yaml stub, open in editor
   8. Boot Lima 'openclaw-staging' VM
   9. Register LaunchAgents
+  8.5. Rebrand PWA assets to haushold.name from sanctum.yaml
   10. Run 'sanctum self-test' (must pass >=95% probes)
 PLAN
 
@@ -137,6 +139,18 @@ else
   run "brew install lima"
 fi
 
+# --- Step 3.5: pyyaml (for sanctum CLI config reads) ---
+# config_get() in lib/common.sh degrades gracefully when pyyaml is missing,
+# but the CLI is materially less useful without it (everything that reads
+# sanctum.yaml falls back to defaults). Make it an explicit install-time
+# dependency.
+log "=== Step 3.5: pyyaml ==="
+if python3 -c "import yaml" 2>/dev/null; then
+  log "  pyyaml already importable [ok]"
+else
+  run "python3 -m pip install --user pyyaml"
+fi
+
 # --- Step 4: Clone repos ---
 log "=== Step 4: Clone repos ==="
 run "sudo mkdir -p $SANCTUM_OPT"
@@ -172,8 +186,8 @@ run "mkdir -p $SANCTUM_HOME"
 if [ -f "$SANCTUM_HOME/sanctum.yaml" ]; then
   log "  $SANCTUM_HOME/sanctum.yaml already exists, not overwriting"
 else
-  if [ -f "$SANCTUM_OPT/sanctum-cli/sanctum.yaml.example" ]; then
-    run "cp $SANCTUM_OPT/sanctum-cli/sanctum.yaml.example $SANCTUM_HOME/sanctum.yaml"
+  if [ -f "$SANCTUM_OPT/sanctum-family-pass/sanctum.yaml.example" ]; then
+    run "cp $SANCTUM_OPT/sanctum-family-pass/sanctum.yaml.example $SANCTUM_HOME/sanctum.yaml"
   elif [ -f "$SANCTUM_OPT/sanctum-screen-time/sanctum.yaml.example" ]; then
     # T1.3 placed sanctum.yaml.example in sanctum-screen-time
     run "cp $SANCTUM_OPT/sanctum-screen-time/sanctum.yaml.example $SANCTUM_HOME/sanctum.yaml"
@@ -244,10 +258,58 @@ else
   log "        (Expected: sanctum-runtime/launchagents/pilot/ should ship 7 plists)"
 fi
 
+# --- Step 8.5: PWA asset rewriter ---
+# pwa/index.html and pwa/manifest.json carry the canonical "Manoir Nepveu"
+# brand strings as install-time templates. Rewrite them to the pilot's
+# haushold name from sanctum.yaml before they're served.
+log "=== Step 8.5: PWA branding ==="
+PWA_DIR="$SANCTUM_OPT/sanctum-screen-time/pwa"
+if [ -d "$PWA_DIR" ]; then
+  # Read haushold.name from sanctum.yaml. Prefer pyyaml (Step 3.5 installs
+  # it). If pyyaml is unavailable, fall back to a crude line-grep that finds
+  # the first `name:` line under a `haushold:` block. The grep heuristic is
+  # imperfect (only handles flat top-level structure, picks the first match,
+  # ignores nested context past one level) but it's good enough for the
+  # canonical haushold.name in the example sanctum.yaml. Falls back to
+  # "Your Haushold" if neither path yields a value.
+  HAUSHOLD_NAME=$(python3 - "$SANCTUM_HOME/sanctum.yaml" <<'PY' 2>/dev/null || echo "Your Haushold"
+import sys, pathlib
+p = pathlib.Path(sys.argv[1])
+if not p.exists():
+    print("Your Haushold"); sys.exit(0)
+text = p.read_text()
+try:
+    import yaml
+    d = yaml.safe_load(text) or {}
+    print(d.get("haushold", {}).get("name", "Your Haushold"))
+except ImportError:
+    # No pyyaml -- best-effort line grep.
+    # Look for a `name:` line whose preceding text contains `haushold:`.
+    for line in text.splitlines():
+        if line.strip().startswith("name:"):
+            idx = text.find(line)
+            if idx >= 0 and "haushold" in text[:idx]:
+                val = line.split(":", 1)[1].strip().strip('"').strip("'")
+                print(val); sys.exit(0)
+    print("Your Haushold")
+PY
+)
+  log "  haushold name: $HAUSHOLD_NAME"
+  if [ "$DRY_RUN" -eq 1 ]; then
+    log "  would rewrite Manoir Nepveu -> $HAUSHOLD_NAME in $PWA_DIR/index.html + manifest.json"
+  else
+    sed -i '' "s/Manoir Nepveu/$HAUSHOLD_NAME/g" "$PWA_DIR/index.html" 2>/dev/null || true
+    sed -i '' "s/Manoir Nepveu/$HAUSHOLD_NAME/g" "$PWA_DIR/manifest.json" 2>/dev/null || true
+    log "  [ok] PWA assets rebranded"
+  fi
+else
+  log "  WARN: $PWA_DIR not found - skipping PWA branding"
+fi
+
 # --- Step 9: self-test (launch gate) ---
 log "=== Step 9: self-test (launch gate) ==="
 log "  Running 'sanctum self-test' as the hard install gate..."
-export PATH="$SANCTUM_OPT/sanctum-cli/bin:$PATH"
+export PATH="$SANCTUM_OPT/sanctum-family-pass/bin:$PATH"
 if [ "$DRY_RUN" -eq 0 ]; then
   if sanctum self-test; then
     log "  [ok] Install verified by self-test."
