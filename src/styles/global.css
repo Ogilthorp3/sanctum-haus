@@ -2,13 +2,16 @@
    sites feel like the same brand without sharing a stylesheet. */
 
 :root {
-    --bg: #0B0E11;
-    --bg-elev: #11161A;
-    --fg: #E8EAEC;
-    --fg-muted: #9AA0A6;
-    --accent: #34D9C7;
-    --warm: #E2B670;
-    --rule: #1F2429;
+    /* Triptyq Masterpiece Theme */
+    --bg: #09031a;
+    --bg-elev: #130a2e;
+    --fg: rgba(250, 250, 255, 0.92);
+    --fg-muted: rgba(250, 250, 255, 0.55);
+    --accent: #e22a3a;
+    --warm: #ff8a2a;
+    --rule: rgba(255, 255, 255, 0.08);
+    --purple: #4a32ff;
+    --violet: #3a1d88;
 
     /* Body: SF, falls back to system. Newsreader for display. */
     --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text",

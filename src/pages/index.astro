@@ -2,24 +2,22 @@
 import Base from "../layouts/Base.astro";
 import EmailCapture from "../components/EmailCapture.astro";
 
-const title = "Sanctum · An AI council for the haus you actually own";
+const title = "Sanctum · The AI council for your firm and your family.";
 ---
 
 <Base
     title={title}
-    description="A council of local AI agents that runs on hardware you own, in a house you live in, for a family you actually have. No cloud round-trip."
+    description="A multi-agent AI council that runs entirely on hardware you own. Built to operate a venture capital firm with absolute confidentiality, and robust enough to run your home."
 >
     <main>
         <p class="tagline">Coming soon · founder beta</p>
 
-        <h1>Your haus already has a brain.<br />It just doesn't know yet.</h1>
+        <h1>Your firm already has a brain.<br />It just doesn't know it yet.</h1>
 
         <p class="lede">
             Sanctum is a council of local AI agents that runs on hardware
-            you own, in a house you live in, for a family you actually
-            have. No cloud round-trip. No "your data may be used to
-            improve our models." No subscription that can disappear next
-            quarter.
+            you own, operating with zero cloud dependencies. No OpenAI API bills. No "your data may be used to improve our models." 
+            Total sovereignty over your startup's secrets, your LP communications, and your family's data.
         </p>
 
         <EmailCapture listName="founders" />
@@ -27,39 +25,45 @@ const title = "Sanctum · An AI council for the haus you actually own";
         <hr />
 
         <p class="muted">
-            Built for the parent who already runs Tailscale, Plex Pass,
-            and a Pi-hole — and is wondering when AI will get the same
-            treatment.
+            Built for the founder, the VC, and the parent who demands absolute privacy and is wondering when AI will finally operate on their terms.
         </p>
 
-        <h2>What it is</h2>
+        <h2>The Triptyq Capital Story</h2>
         <p>
-            A multi-agent AI council — eight specialized agents handling
-            different domains (security, health, finance, family
-            communications, infrastructure, satellite outposts, daily
-            wisdom) — orchestrated through a single voice agent on your
-            phone.
+            At Triptyq Capital, we don't just invest in the future; we run our venture firm on it. 
+            Sanctum was forged in the fires of high-stakes deal flows and LP negotiations. 
+            Our agents brief us on pitch decks before board meetings, parse complex financial models, and orchestrate our entire fund's intelligence—all while remaining completely isolated from the public cloud. 
+            If it's confidential enough for our LPs, it requires Sanctum.
         </p>
+
+        <h2>One Council. Two Worlds.</h2>
         <p>
-            It runs entirely on your hardware. A used Mac Mini ($600 on
-            eBay) is enough. No GPU server farm. No OpenAI bill.
+            A multi-agent architecture featuring specialized entities orchestrated through a single voice interface on your phone.
         </p>
-        <p>
-            When the WiFi goes down, your council still works. When the
-            cloud has an outage, your screen-time enforcement still works.
-            When OpenAI changes their terms, your council still belongs to
-            you.
-        </p>
+        
+        <h3>For the Startup & Firm</h3>
+        <ul>
+            <li><strong>Absolute Confidentiality:</strong> Analyze proprietary codebases, pitch decks, and cap tables without leaking IP to third-party models.</li>
+            <li><strong>The Briefing:</strong> Your council pre-reads your deal flow and briefs you on your commute.</li>
+            <li><strong>Institutional Memory:</strong> An encrypted, locally vectorized RAG pipeline that remembers every meeting, term sheet, and founder interaction.</li>
+        </ul>
+
+        <h3>For the Haus</h3>
+        <ul>
+            <li><strong>Infrastructure & Security:</strong> Enforces screen-time policies locally (even when Apple's Screen Time is flaky) and guards the network.</li>
+            <li><strong>Family Logistics:</strong> Coordinates schedules, answers your Apple Watch from the park, and acts as the ultimate home operating system.</li>
+            <li><strong>Offline Resilience:</strong> When the WiFi goes down or the cloud has an outage, your council still works.</li>
+        </ul>
+
+        <hr />
 
         <h2>What you get</h2>
 
         <h3>Sanctum Core — free, open source</h3>
         <ul>
-            <li>The council: eight agents, distinct personalities, voice via your phone</li>
-            <li>The cathedral: local Qwen 3.6 35B inference at 50+ tokens/sec on M-series Mac</li>
-            <li>Force Flow: your house's nervous system; routes alerts, watches the watchers</li>
-            <li>Screen Time: parental controls that work even when Apple's are flaky</li>
-            <li>Living Force: self-healing infrastructure</li>
+            <li>The council: eight distinct agents, voice-accessible via your phone</li>
+            <li>The cathedral: local Qwen 3.6 35B inference at 50+ tokens/sec on an M-series Mac</li>
+            <li>Force Flow: your network's nervous system; routes alerts, watches the watchers</li>
             <li>mTLS everywhere: every internal connection mutually authenticated</li>
             <li>No telemetry. We don't know if you're running it.</li>
         </ul>
@@ -67,30 +71,27 @@ const title = "Sanctum · An AI council for the haus you actually own";
             License: FSL-1.1-MIT (auto-converts to MIT after 2 years).
         </p>
 
-        <h3>Sanctum Family Pass — $129, lifetime</h3>
+        <h3>Sanctum Founder Pass — $129, lifetime</h3>
         <ul>
-            <li>Holocron mobile + iPad app, talks to your council via Tailscale</li>
-            <li>Cross-device memory sync (your own R2 / B2 bucket, encrypted)</li>
-            <li>Pre-trained agent personalities and voice profiles</li>
-            <li>Multi-haus federation (chalet, in-laws, dorm rooms)</li>
+            <li>Holocron mobile + iPad app, seamlessly syncing with your council via Tailscale</li>
+            <li>Cross-device encrypted memory sync (your own R2 / B2 bucket)</li>
+            <li>Pre-trained agent personalities and voice profiles tailored for executives</li>
+            <li>Multi-haus federation (office, chalet, in-laws, dorm rooms)</li>
             <li>Founder support, direct email, six months</li>
+            <li><strong>Triptyq Capital Portfolio & LPs:</strong> Lifetime free access for all our portfolio founders (and yes, our LPs too 😉).</li>
         </ul>
         <p class="muted">One payment. No subscription. Yours forever.</p>
 
         <h2>Who's behind this</h2>
         <p>
-            I'm Bertrand. I'm a venture capitalist, a father of one
-            teenager, and a solo developer who has been running this on
-            his own family for the last 14 months. The Sanctum council
-            answers my Apple Watch when I ask Yoda about my HRV. It briefs
-            me on my deal flow before board meetings. It locked the
-            chalet's Tailscale exit when my fifteen-year-old tried to use
-            it to bypass the screen-time limits.
+            I'm Bertrand. I'm a venture capitalist, a father of a teenager, and a solo developer who has been running Triptyq Capital and my family on this exact stack for the last 14 months.
+        </p>
+        <p>
+            The Sanctum council answers my Apple Watch when I ask Yoda about my HRV after a Thursday morning park session. It briefs me on emerging tech investments before my Friday board meetings. And it famously locked the chalet's Tailscale exit when my fifteen-year-old tried to bypass the network limits.
         </p>
         <p>
             I am building Sanctum because I want it to exist. The business
-            model is "I can't keep maintaining this for free, but I refuse
-            to make it depend on the cloud." A one-time payment for
+            model is simple: I refuse to make it depend on the cloud. A one-time payment for
             premium features pays for the time. The open-source core stays
             free forever.
         </p>
