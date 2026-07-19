@@ -198,6 +198,15 @@ hr {
     color: var(--fg-muted);
 }
 
+.screenshot {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--rule);
+    margin: 2.5rem 0;
+    display: block;
+}
+
 @media (max-width: 600px) {
     main {
         padding: 3rem 1.25rem 4rem;
